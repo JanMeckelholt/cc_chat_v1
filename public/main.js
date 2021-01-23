@@ -38,9 +38,13 @@ $(function() {
   // Sets the client's username
   const setUsername = () => {
     username = cleanInput($usernameInput.val().trim());
-
-    // If the username is valid
-    if (username) {
+   // if (username) {
+      //const user = mongoInit.getUser(username);
+      //const user = null;
+    //}
+    //console.log("user: "+ user)
+    //if (user == null) {
+    if (username){  
       $loginPage.fadeOut();
       $chatPage.show();
       $loginPage.off('click');

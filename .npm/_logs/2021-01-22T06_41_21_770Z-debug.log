@@ -15,11 +15,11 @@
 14 timing config:load:validate Completed in 0ms
 15 timing config:load:setUserAgent Completed in 0ms
 16 timing config:load:setEnvs Completed in 1ms
-17 timing config:load Completed in 7ms
-18 verbose npm-session 289a6a5c9e577e37
-19 timing npm:load Completed in 17ms
-20 timing command:run-script Completed in 630ms
-21 timing command:start Completed in 632ms
+17 timing config:load Completed in 6ms
+18 verbose npm-session e3fb1af2c8298523
+19 timing npm:load Completed in 12ms
+20 timing command:run-script Completed in 542ms
+21 timing command:start Completed in 544ms
 22 verbose stack Error: command failed
 22 verbose stack     at ChildProcess.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/@npmcli/promise-spawn/index.js:64:27)
 22 verbose stack     at ChildProcess.emit (node:events:376:20)
@@ -27,7 +27,7 @@
 22 verbose stack     at Process.ChildProcess._handle.onexit (node:internal/child_process:295:5)
 23 verbose pkgid socket.io-chat@0.0.0
 24 verbose cwd /root
-25 verbose Linux 5.4.0-62-generic
+25 verbose Linux 5.4.0-64-generic
 26 verbose argv "/usr/local/bin/node" "/usr/local/bin/npm" "start"
 27 verbose node v15.5.0
 28 verbose npm  v7.3.0

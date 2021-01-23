@@ -5,26 +5,17 @@ const path = require('path');
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const port = process.env.PORT || 3000;
+const mongoInit = require('./mongoInit');
 
-const MongoClient = require('mongodb').MongoClient;
-const assert = require('assert');
-// Connection URL
-const url = 'mongodb://172.17.0.1:27017/data/db';
-// Database Name
-const dbName = 'chat-db';
-// Create a new MongoClient
-const client = new MongoClient(url);
+
+
 
 server.listen(port, () => {
-  console.log('Server listening at port %d', port);
 
-// Use connect method to connect to the Server
-client.connect(function(err) {
-  assert.equal(null, err);
-  console.log("Connected successfully to server");
-  const db = client.db(dbName);
-  client.close();
-});
+  console.log('Tach! Server listening at port %d', port);
+  //mongoInit.mConnect();
+  //mongoInit.write2db(res, "test");
+  //mongoInit.writeTest();
 
 });
 
@@ -50,11 +41,16 @@ io.on('connection', (socket) => {
   // when the client emits 'add user', this listens and executes
   socket.on('add user', (username) => {
     if (addedUser) return;
-
+    //if (mongoInit.getUser(username)) return;
     // we store the username in the socket session for this client
     socket.username = username;
     ++numUsers;
     addedUser = true;
+    console.log(socket.username);
+    console.log("User added");
+    mongoInit.writeLogin2db(socket.username);
+    console.log("writeLogin2db endend");
+
     socket.emit('login', {
       numUsers: numUsers
     });
