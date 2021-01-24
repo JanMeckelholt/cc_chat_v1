@@ -6,6 +6,7 @@ const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const port = process.env.PORT || 3000;
 const mongoInit = require('./mongoInit');
+//const user;
 
 
 
@@ -41,24 +42,32 @@ io.on('connection', (socket) => {
   // when the client emits 'add user', this listens and executes
   socket.on('add user', (username) => {
     if (addedUser) return;
-    //if (mongoInit.getUser(username)) return;
-    // we store the username in the socket session for this client
-    socket.username = username;
-    ++numUsers;
-    addedUser = true;
-    console.log(socket.username);
-    console.log("User added");
-    mongoInit.writeLogin2db(socket.username);
-    console.log("writeLogin2db endend");
+    mongoInit.callUserPromise(username)
+      .then(user => {
+        console.log("user in socke.on add user: "+ user);
+        if (user == null){ 
+          // we store the username in the socket session for this client
+          socket.username = username;
+          ++numUsers;
+          addedUser = true;
+          console.log(socket.username);
+          console.log("User added");
+          mongoInit.writeLogin2db(socket.username);
+          console.log("writeLogin2db endend");
 
-    socket.emit('login', {
-      numUsers: numUsers
-    });
-    // echo globally (all clients) that a person has connected
-    socket.broadcast.emit('user joined', {
-      username: socket.username,
-      numUsers: numUsers
-    });
+          socket.emit('login', {
+            numUsers: numUsers
+          });
+          // echo globally (all clients) that a person has connected
+          socket.broadcast.emit('user joined', {
+            username: socket.username,
+            numUsers: numUsers
+          });
+        } else {
+          console.log("username taken: "+ username);
+          socket.broadcast.emit('username taken', {username: username});
+        }
+      });
   });
 
   // when the client emits 'typing', we broadcast it to others
