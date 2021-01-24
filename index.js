@@ -87,6 +87,8 @@ io.on('connection', (socket) => {
   // when the user disconnects.. perform this
   socket.on('disconnect', () => {
     if (addedUser) {
+      console.log("remove User: "+ socket.username);
+      mongoInit.removeLoginFromdb(socket.username);
       --numUsers;
 
       // echo globally that this client has left

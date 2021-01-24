@@ -38,7 +38,9 @@ $(function() {
 
   // Sets the client's username
   const setUsername = () => {
+    console.log("Set username 0: " + username);
     username = cleanInput($usernameInput.val().trim());
+    console.log("Set username 1: " + username);
     if (username) {
       socket.emit('username entered', username);
     }
@@ -200,6 +202,7 @@ $(function() {
     }
     // When the client hits ENTER on their keyboard
     if (event.which === 13) {
+      console.log("Enter: " + username);
       if (username) {
         sendMessage();
         socket.emit('stop typing');
@@ -245,9 +248,10 @@ $(function() {
 
 
   // Whenever the server emits 'new message', update the chat body
-  socket.on('username taken', (username) => {
+  socket.on('username taken', (takenName) => {
     console.log("username taken")
     $usernameInput.val('');
+    username = null;
 
     $errorLogin.text('Username is taken. Please try another one!');
     //$document.getElementById("errorLogin").style.display = 'none';

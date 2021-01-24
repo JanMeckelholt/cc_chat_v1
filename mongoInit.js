@@ -25,6 +25,25 @@ function writeLogin2db(username) {
     });
 }
 
+function removeLoginFromdb(username){
+  callClientPromise().then(client => {
+    console.log("RemoveLoginFromdb: client connected");
+    const query = {login: username}
+    const db = client.db(dbName);
+    callUserPromise(username)
+      .then (user=>{
+        console.log("user in removeLogiFromdb: "+ user);
+        if (user){
+          entry = {login: username, admin: false}
+          removeEntry(db, collectionName, entry, function(){
+            console.log("RemoveLoginFromdb: Close Connection");
+            client.close();
+          });
+        } else client.close();
+      });
+    });
+}
+
 const clientPromise = () =>{
   return new Promise((resolve, reject) =>{
     MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: false}, function(err, client){
@@ -101,10 +120,21 @@ const upsertEntry = function(db, collection, entry, callback){
     callback(result);
   });
 }
+const removeEntry = function(db, collection, entry, callback){
+  db.collection(collection).deleteOne(entry, function(err, result) {
+    assert.equal(null, err);
+    console.log('err: ' + err);
+    console.log('Entry delteted: ' + result);
+    callback(result);
+  });
+}
+
+
 
 
 
 
 
 exports.writeLogin2db = writeLogin2db;
+exports.removeLoginFromdb = removeLoginFromdb;
 exports.callUserPromise = callUserPromise;
