@@ -39,14 +39,14 @@ io.on('connection', (socket) => {
     });
   });
 
+ 
   // when the client emits 'add user', this listens and executes
-  socket.on('add user', (username) => {
+  socket.on('username entered', (username) => {
     if (addedUser) return;
     mongoInit.callUserPromise(username)
       .then(user => {
         console.log("user in socke.on add user: "+ user);
         if (user == null){ 
-          // we store the username in the socket session for this client
           socket.username = username;
           ++numUsers;
           addedUser = true;
@@ -65,7 +65,7 @@ io.on('connection', (socket) => {
           });
         } else {
           console.log("username taken: "+ username);
-          socket.broadcast.emit('username taken', {username: username});
+          socket.emit('username taken', username);
         }
       });
   });

@@ -10,6 +10,7 @@ $(function() {
   // Initialize variables
   var $window = $(window);
   var $usernameInput = $('.usernameInput'); // Input for username
+  var $errorLogin = $('.errorLogin'); 
   var $messages = $('.messages'); // Messages area
   var $inputMessage = $('.inputMessage'); // Input message input box
 
@@ -38,21 +39,19 @@ $(function() {
   // Sets the client's username
   const setUsername = () => {
     username = cleanInput($usernameInput.val().trim());
-   // if (username) {
-      //const user = mongoInit.getUser(username);
-      //const user = null;
-    //}
-    //console.log("user: "+ user)
-    //if (user == null) {
-    if (username){  
-      $loginPage.fadeOut();
-      $chatPage.show();
-      $loginPage.off('click');
-      $currentInput = $inputMessage.focus();
-
-      // Tell the server your username
-      socket.emit('add user', username);
+    if (username) {
+      socket.emit('username entered', username);
     }
+
+    // if (username){  
+    //   $loginPage.fadeOut();
+    //   $chatPage.show();
+    //   $loginPage.off('click');
+    //   $currentInput = $inputMessage.focus();
+
+    //   // Tell the server your username
+    //   socket.emit('add user', username);
+    // }
   }
 
   // Sends a chat message
@@ -232,12 +231,28 @@ $(function() {
   // Whenever the server emits 'login', log the login message
   socket.on('login', (data) => {
     connected = true;
+      $loginPage.fadeOut();
+      $chatPage.show();
+      $loginPage.off('click');
+      $currentInput = $inputMessage.focus();
     // Display the welcome message
     var message = "Welcome to Socket.IO Chat – ";
     log(message, {
       prepend: true
     });
     addParticipantsMessage(data);
+  });
+
+
+  // Whenever the server emits 'new message', update the chat body
+  socket.on('username taken', (username) => {
+    console.log("username taken")
+    $usernameInput.val('');
+
+    $errorLogin.text('Username is taken. Please try another one!');
+    //$document.getElementById("errorLogin").style.display = 'none';
+    //$document.getElementById("errorLogin3").style.display = 'none';
+    
   });
 
   // Whenever the server emits 'new message', update the chat body
